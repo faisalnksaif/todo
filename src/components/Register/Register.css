@@ -1,0 +1,24 @@
+.Login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column;
+  height:90%;
+}
+
+.Login .center {
+  width: 30%;
+  display: flex;
+  flex-flow:column;
+  background: #cbcbcb;
+  padding:20px;
+  align-items:center;
+  border-radius: 3px;
+}
+
+.Login .center .MuiFormControl-root {
+  margin: 10px;
+}
+
+ 
+ 
