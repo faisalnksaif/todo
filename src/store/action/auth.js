@@ -34,7 +34,9 @@ export const setLoading = () => {
 };
 
 export const signIn = (email, password) => {
+  console.log(email, password);
   return dispatch => {
+    dispatch(setLoading());
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
@@ -43,6 +45,7 @@ export const signIn = (email, password) => {
         dispatch(setStoreToken(response));
       })
       .catch(error => {
+        console.log(error);
         dispatch(setSignupError(error.message));
       });
   };
@@ -60,7 +63,7 @@ export const signUp = (email, password) => {
       })
       .catch(error => {
         console.log(error);
-        dispatch(setSignupError(error));
+        dispatch(setSignupError(error.message));
       });
   };
 };

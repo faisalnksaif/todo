@@ -35,7 +35,7 @@ const layout = React.memo(() => {
   };
 
   useEffect(() => {
-    setLoggedIn(!!auth.uid);
+    setLoggedIn(!!auth.idToken);
     const routeLinks = loggedIn ? LINKS_WITH_AUTH : LINKS_WITHOUT_AUTH;
     setRoutes(
       routeLinks.map((route, index) => {

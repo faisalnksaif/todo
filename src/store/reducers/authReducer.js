@@ -3,7 +3,6 @@ import * as actionTypes from "../action/actionTypes";
 const initialState = {
   email: "",
   refreshToken: "",
-  localId: "",
   idToken: "",
   error: "",
   loading: false,
@@ -31,17 +30,17 @@ const signupErrorHandler = (state, action) => {
   return {
     ...state,
     loading: false,
-    error: action.error.message
+    error: action.error
   };
 };
 
 const storeTokenHandler = (state, action) => {
+    console.log(action)
   return {
     ...state,
-    email: action.authDetails.email,
-    refreshToken: action.authDetails.refreshToken,
-    localId: action.authDetails.localId,
-    idToken: action.authDetails.idToken,
+    email: action.authDetails.user.email,
+    refreshToken: action.authDetails.user.refreshToken,
+    idToken: action.authDetails.user.uid,
     error: "",
     loading: false
   };

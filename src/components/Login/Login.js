@@ -1,16 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as actions from "../../store/action/auth";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import { Button, CircularProgress } from "@material-ui/core";
+import * as snackbarActions from "../../store/action/snackbar";
 import "./Login.css";
 
 export const login = React.memo(props => {
-  const authentication = useSelector(state => state.auth);
+  const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    console.log(auth);
+
+    if (!!auth.idToken) {
+      dispatch(snackbarActions.setSnackBarLabel("Login Success"));
+      props.history.push('/')
+    }
+    if (!!auth.error) {
+      dispatch(snackbarActions.setSnackBarLabel(auth.error));
+    }
+  }, [auth]);
 
   return (
     <div className="Login">
@@ -31,14 +44,18 @@ export const login = React.memo(props => {
           label="Password"
         />
         <div>
-          <Button
-            onClick={() => {
-              dispatch(actions.signIn(email, password));
-            }}
-            color="primary"
-          >
-            SIGN IN
-          </Button>
+          {!auth.loading ? (
+            <Button
+              onClick={() => {
+                dispatch(actions.signIn(email, password));
+              }}
+              color="primary"
+            >
+              SIGN IN
+            </Button>
+          ) : (
+            <CircularProgress />
+          )}
         </div>
       </div>
     </div>

@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as authActions from "../../store/action/auth";
 import * as snackbarActions from "../../store/action/snackbar";
-import {
-  TextField,
-  Button,
-  CircularProgress
-} from "@material-ui/core";
+import { TextField, Button, CircularProgress } from "@material-ui/core";
 import "./Register.css";
 
 export const register = React.memo(props => {
@@ -18,11 +14,10 @@ export const register = React.memo(props => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   useEffect(() => {
-    console.log(auth);
     if (auth.error) {
       setSnackLabel(auth.error);
     } else if (auth.registered) {
-      setSnackLabel("Registration Success");
+      setSnackLabel("Registration Success, Please login");
       props.history.push("/login");
     }
   }, [auth, props.history]);
