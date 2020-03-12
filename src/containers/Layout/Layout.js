@@ -1,9 +1,11 @@
-import React from "react";
-import { Switch, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import Header from "../../components/Header/Header";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
-import Container from "@material-ui/core/Container";
+import { Container, Snackbar } from "@material-ui/core";
+import * as snackbarActions from "../../store/action/snackbar";
 import { LINKS_WITHOUT_AUTH, LINKS_WITH_AUTH } from "../../const/routes";
 import "./Layout.css";
 
@@ -20,19 +22,57 @@ const theme = createMuiTheme({
   }
 });
 
-const routes = LINKS_WITHOUT_AUTH.map((route, index) => {
-  return <Route key={index} path={route.path} component={route.component} />;
-});
+const layout = React.memo(() => {
+  const auth = useSelector(state => state.auth);
+  const snackbarLabel = useSelector(state => state.snackbar.label);
+  const dispatch = useDispatch();
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [routes, setRoutes] = useState([]);
+  console.log(snackbarLabel)
 
-const layout = () => {
+  const snackbarCloseHandler = () => {
+    dispatch(snackbarActions.setSnackBarLabel(""));
+  };
+
+  useEffect(() => {
+    setLoggedIn(!!auth.uid);
+    const routeLinks = loggedIn ? LINKS_WITH_AUTH : LINKS_WITHOUT_AUTH;
+    setRoutes(
+      routeLinks.map((route, index) => {
+        return (
+          <Route key={index} path={route.path} component={route.component} />
+        );
+      })
+    );
+  }, [auth]);
+
   return (
     <ThemeProvider theme={theme}>
       <Header />
       <Container className="container" maxWidth="lg">
-        <Switch>{routes}</Switch>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={() =>
+              loggedIn ? <Redirect to="/todo" /> : <Redirect to="/login" />
+            }
+          />
+          {routes}
+        </Switch>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={!!snackbarLabel}
+          autoHideDuration={6000}
+          onClose={snackbarCloseHandler}
+          message={snackbarLabel}
+        />
       </Container>
     </ThemeProvider>
   );
-};
+});
 
 export default layout;

@@ -1,5 +1,6 @@
 import Login from "../components/Login/Login";
-import Signup from '../components/Register/Register'
+import Signup from "../components/Register/Register";
+import Todo from "../containers/Todo/Todo";
 
 export const LINKS_WITHOUT_AUTH = [
   {
@@ -16,8 +17,8 @@ export const LINKS_WITHOUT_AUTH = [
 
 export const LINKS_WITH_AUTH = [
   {
-    path: "/login",
-    name: "Login",
-    component: Login
+    path: "/todo",
+    name: "Todo",
+    component: Todo
   }
 ];

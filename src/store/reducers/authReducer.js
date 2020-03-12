@@ -3,9 +3,11 @@ import * as actionTypes from "../action/actionTypes";
 const initialState = {
   email: "",
   refreshToken: "",
-  uid: "",
+  localId: "",
+  idToken: "",
   error: "",
-  loading: false
+  loading: false,
+  registered: false
 };
 
 const authReducer = (state = initialState, action) => {
@@ -16,6 +18,8 @@ const authReducer = (state = initialState, action) => {
       return clearErrorHandler(state, action);
     case actionTypes.STORE_TOKEN:
       return storeTokenHandler(state, action);
+    case actionTypes.SIGNUP:
+      return signupHandler(state, action);
     case actionTypes.LOADING:
       return loadingHandler(state, action);
     default:
@@ -34,9 +38,10 @@ const signupErrorHandler = (state, action) => {
 const storeTokenHandler = (state, action) => {
   return {
     ...state,
-    email: action.authDetails.user.email,
-    refreshToken: action.authDetails.user.refreshToken,
-    uid: action.authDetails.user.uid,
+    email: action.authDetails.email,
+    refreshToken: action.authDetails.refreshToken,
+    localId: action.authDetails.localId,
+    idToken: action.authDetails.idToken,
     error: "",
     loading: false
   };
@@ -54,6 +59,15 @@ const loadingHandler = (state, action) => {
   return {
     ...state,
     loading: true
+  };
+};
+
+const signupHandler = (state, action) => {
+  return {
+    ...state,
+    error: "",
+    registered: true,
+    loading: false
   };
 };
 

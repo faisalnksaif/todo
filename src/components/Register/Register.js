@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import * as actions from "../../store/action/auth";
+import * as authActions from "../../store/action/auth";
+import * as snackbarActions from "../../store/action/snackbar";
 import {
   TextField,
-  Snackbar,
   Button,
   CircularProgress
 } from "@material-ui/core";
@@ -16,17 +16,16 @@ export const register = React.memo(props => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [snackLabel, setSnackLabel] = useState();
 
   useEffect(() => {
     console.log(auth);
     if (auth.error) {
       setSnackLabel(auth.error);
-    } else if (auth.uid && auth.email) {
+    } else if (auth.registered) {
       setSnackLabel("Registration Success");
-      props.history.push("/");
+      props.history.push("/login");
     }
-  }, [auth]);
+  }, [auth, props.history]);
 
   const handleSignup = () => {
     if (email === "") {
@@ -39,13 +38,12 @@ export const register = React.memo(props => {
       setSnackLabel("Please confirm your password again");
       setConfirmPassword("");
     } else {
-      dispatch(actions.signUp(email, password));
+      dispatch(authActions.signUp(email, password));
     }
   };
 
-  const handleClose = () => {
-    setSnackLabel("");
-    dispatch(actions.setClearStatus());
+  const setSnackLabel = label => {
+    dispatch(snackbarActions.setSnackBarLabel(label));
   };
 
   return (
@@ -88,17 +86,6 @@ export const register = React.memo(props => {
             <CircularProgress />
           )}
         </div>
-
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={!!snackLabel}
-          autoHideDuration={6000}
-          onClose={handleClose}
-          message={snackLabel}
-        />
       </div>
     </div>
   );

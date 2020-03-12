@@ -1,5 +1,4 @@
 import * as actionTypes from "./actionTypes";
-import axios from "axios";
 import firebase from "firebase";
 
 export const setStoreToken = authDetails => {
@@ -41,9 +40,10 @@ export const signIn = (email, password) => {
       .signInWithEmailAndPassword(email, password)
       .then(response => {
         console.log(response);
+        dispatch(setStoreToken(response));
       })
       .catch(error => {
-        console.log(error);
+        dispatch(setSignupError(error.message));
       });
   };
 };
@@ -56,7 +56,7 @@ export const signUp = (email, password) => {
       .createUserWithEmailAndPassword(email, password)
       .then(response => {
         console.log(response);
-        dispatch(setStoreToken(response));
+        dispatch(setSignup(response));
       })
       .catch(error => {
         console.log(error);

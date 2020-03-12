@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import thunk from "redux-thunk";
 import authReducer from "./store/reducers/authReducer";
+import snackbarReducer from "./store/reducers/snackbarReducer";
 import Layout from "./containers/Layout/Layout";
 import firebaseConfig from "./config/firebaseConfig";
 import "./App.css";
@@ -15,7 +16,8 @@ function App() {
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
   const reducers = combineReducers({
-    auth: authReducer
+    auth: authReducer,
+    snackbar: snackbarReducer
   });
 
   const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
