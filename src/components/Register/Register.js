@@ -3,15 +3,52 @@ import { useSelector, useDispatch } from "react-redux";
 import * as authActions from "../../store/action/auth";
 import * as snackbarActions from "../../store/action/snackbar";
 import { TextField, Button, CircularProgress } from "@material-ui/core";
+import {
+  inputChangeHandler,
+  validateForm,
+  isFormValid
+} from "../../utils/utils";
 import "./Register.css";
 
 export const register = React.memo(props => {
   const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [formElements, setFormElements] = useState([
+    {
+      name: "Email",
+      value: "",
+      placeholder: "Email",
+      type: "text",
+      validations: {
+        required: true,
+        email: true
+      },
+      errorMessage: ""
+    },
+    {
+      name: "Password",
+      value: "",
+      placeholder: "Password",
+      type: "password",
+      validations: {
+        required: true,
+        minLength: 6
+      },
+      errorMessage: ""
+    },
+    {
+      name: "Confirm Password",
+      value: "",
+      placeholder: "Confirm Password",
+      type: "password",
+      validations: {
+        required: true,
+        minLength: 6
+      },
+      errorMessage: ""
+    }
+  ]);
 
   useEffect(() => {
     if (auth.error) {
@@ -22,51 +59,41 @@ export const register = React.memo(props => {
     }
   }, [auth, props.history]);
 
-  const handleSignup = () => {
-    if (email === "") {
-      setSnackLabel("Please enter the email address");
-    } else if (password === "") {
-      setSnackLabel("Please enter the password");
-    } else if (confirmPassword === "") {
-      setSnackLabel("Please confirm your password");
-    } else if (password !== confirmPassword) {
-      setSnackLabel("Please confirm your password again");
-      setConfirmPassword("");
-    } else {
-      dispatch(authActions.signUp(email, password));
-    }
-  };
-
   const setSnackLabel = label => {
     dispatch(snackbarActions.setSnackBarLabel(label));
   };
 
+  const handleSignup = () => {
+    setFormElements(validateForm([...formElements]));
+    if (isFormValid(formElements)) {
+      dispatch(
+        authActions.signUp(formElements[0].value, formElements[1].value)
+      );
+    }
+  };
+
+  const formElementsTemplate = formElements.map((element, index) => {
+    return (
+      <TextField
+        key={index}
+        value={element.value}
+        error={!!element.errorMessage}
+        helperText={element.errorMessage}
+        type={element.type}
+        onChange={event => {
+          setFormElements(
+            inputChangeHandler(event.target.value, element, formElements)
+          );
+        }}
+        label={element.placeholder}
+      />
+    );
+  });
+
   return (
     <div className="Login">
       <div className="center">
-        <TextField
-          value={email}
-          onChange={event => {
-            setEmail(event.target.value);
-          }}
-          label="Email"
-        />
-        <TextField
-          value={password}
-          onChange={event => {
-            setPassword(event.target.value);
-          }}
-          type="password"
-          label="Password"
-        />
-        <TextField
-          value={confirmPassword}
-          onChange={event => {
-            setConfirmPassword(event.target.value);
-          }}
-          type="password"
-          label="Confirm Password"
-        />
+        {formElementsTemplate}
         <div>
           {!auth.loading ? (
             <Button

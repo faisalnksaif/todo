@@ -5,49 +5,84 @@ import TextField from "@material-ui/core/TextField";
 import { Button, CircularProgress } from "@material-ui/core";
 import * as snackbarActions from "../../store/action/snackbar";
 import "./Login.css";
+import {
+  inputChangeHandler,
+  validateForm,
+  isFormValid
+} from "../../utils/utils";
 
 export const login = React.memo(props => {
   const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formElements, setFormElements] = useState([
+    {
+      name: "Email",
+      value: "",
+      placeholder: "Email",
+      type: "text",
+      validations: {
+        required: true
+      },
+      errorMessage: ""
+    },
+    {
+      name: "Password",
+      value: "",
+      placeholder: "Password",
+      type: "password",
+      validations: {
+        required: true,
+        minLength: 6
+      },
+      errorMessage: ""
+    }
+  ]);
 
   useEffect(() => {
-    console.log(auth);
-
     if (!!auth.idToken) {
       dispatch(snackbarActions.setSnackBarLabel("Login Success"));
-      props.history.push('/')
+      props.history.push("/");
     }
     if (!!auth.error) {
       dispatch(snackbarActions.setSnackBarLabel(auth.error));
     }
   }, [auth]);
 
+  const loginHandler = () => {
+    setFormElements(validateForm([...formElements]));
+    if (isFormValid(formElements)) {
+      dispatch(actions.signIn(formElements[0].value, formElements[1].value));
+    }
+  };
+
+  const formElementTemplate = formElements.map((element, index) => {
+    return (
+      <TextField
+        key={index}
+        value={element.value}
+        error={!!element.errorMessage}
+        helperText={element.errorMessage}
+        type={element.type}
+        onChange={event => {
+          setFormElements(
+            inputChangeHandler(event.target.value, element, formElements)
+          );
+        }}
+        label={element.placeholder}
+      />
+    );
+  });
+
   return (
     <div className="Login">
       <div className="center">
-        <TextField
-          value={email}
-          onChange={event => {
-            setEmail(event.target.value);
-          }}
-          label="Email"
-        />
-        <TextField
-          value={password}
-          onChange={event => {
-            setPassword(event.target.value);
-          }}
-          type="password"
-          label="Password"
-        />
+        {formElementTemplate}
         <div>
           {!auth.loading ? (
             <Button
               onClick={() => {
-                dispatch(actions.signIn(email, password));
+                loginHandler();
               }}
               color="primary"
             >

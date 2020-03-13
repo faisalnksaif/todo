@@ -26,17 +26,15 @@ const layout = React.memo(() => {
   const auth = useSelector(state => state.auth);
   const snackbarLabel = useSelector(state => state.snackbar.label);
   const dispatch = useDispatch();
-  const [loggedIn, setLoggedIn] = useState(false);
   const [routes, setRoutes] = useState([]);
-  console.log(snackbarLabel)
+  console.log(snackbarLabel);
 
   const snackbarCloseHandler = () => {
     dispatch(snackbarActions.setSnackBarLabel(""));
   };
-
   useEffect(() => {
-    setLoggedIn(!!auth.idToken);
-    const routeLinks = loggedIn ? LINKS_WITH_AUTH : LINKS_WITHOUT_AUTH;
+    const routeLinks =
+      auth && auth.idToken ? LINKS_WITH_AUTH : LINKS_WITHOUT_AUTH;
     setRoutes(
       routeLinks.map((route, index) => {
         return (
@@ -55,7 +53,11 @@ const layout = React.memo(() => {
             exact
             path="/"
             render={() =>
-              loggedIn ? <Redirect to="/todo" /> : <Redirect to="/login" />
+              auth && auth.idToken ? (
+                <Redirect to="/todo" />
+              ) : (
+                <Redirect to="/login" />
+              )
             }
           />
           {routes}

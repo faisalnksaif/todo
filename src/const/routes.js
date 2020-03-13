@@ -20,5 +20,10 @@ export const LINKS_WITH_AUTH = [
     path: "/todo",
     name: "Todo",
     component: Todo
+  },
+  {
+    path: "/login",
+    name: "Logout",
+    component: Login
   }
 ];
