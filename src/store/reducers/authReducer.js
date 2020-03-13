@@ -23,6 +23,8 @@ const authReducer = (state = { ...initialState }, action) => {
       return logoutHandler(state, action);
     case actionTypes.LOADING:
       return loadingHandler(state, action);
+    case actionTypes.GET_LOGIN_STATUS:
+      return loginStatusHandler(state, action);
     default:
       return state;
   }
@@ -37,8 +39,7 @@ const signupErrorHandler = (state, action) => {
 };
 
 const storeTokenHandler = (state, action) => {
-  console.log(action);
-  return {
+  const authState = {
     ...state,
     email: action.authDetails.user.email,
     refreshToken: action.authDetails.user.refreshToken,
@@ -46,6 +47,9 @@ const storeTokenHandler = (state, action) => {
     error: "",
     loading: false
   };
+  localStorage.setItem("AUTH_TOKEN", JSON.stringify(authState));
+
+  return authState;
 };
 
 const clearErrorHandler = (state, action) => {
@@ -82,6 +86,21 @@ const logoutHandler = (state, action) => {
     loading: false,
     registered: false
   };
+};
+
+const loginStatusHandler = (state, action) => {
+  const storedAuthState = localStorage.getItem("AUTH_TOKEN");
+  try {
+    const parsedAuthState = JSON.parse(storedAuthState);
+    return {
+      ...state,
+      ...parsedAuthState
+    };
+  } catch (ex) {
+    return {
+      ...state
+    };
+  }
 };
 
 export default authReducer;

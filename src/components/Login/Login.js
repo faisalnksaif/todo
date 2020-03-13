@@ -41,6 +41,10 @@ export const login = React.memo(props => {
   ]);
 
   useEffect(() => {
+    dispatch(actions.getLoginStatus())
+  }, []);
+
+  useEffect(() => {
     if (!!auth.idToken) {
       dispatch(snackbarActions.setSnackBarLabel("Login Success"));
       props.history.push("/");

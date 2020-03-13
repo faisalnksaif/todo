@@ -40,6 +40,12 @@ export const setLogout = () => {
   };
 };
 
+export const getLoginStatus = () => {
+  return {
+    type: actionTypes.GET_LOGIN_STATUS
+  };
+};
+
 export const signIn = (email, password) => {
   console.log(email, password);
   return dispatch => {
