@@ -77,6 +77,7 @@ const signupHandler = (state, action) => {
 };
 
 const logoutHandler = (state, action) => {
+  localStorage.setItem("AUTH_TOKEN", "");
   return {
     ...state,
     email: "",

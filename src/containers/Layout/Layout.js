@@ -6,6 +6,7 @@ import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import { Container, Snackbar } from "@material-ui/core";
 import * as snackbarActions from "../../store/action/snackbar";
+import * as authActions from "../../store/action/auth";
 import { LINKS_WITHOUT_AUTH, LINKS_WITH_AUTH } from "../../const/routes";
 import "./Layout.css";
 
@@ -32,6 +33,11 @@ const layout = React.memo(() => {
   const snackbarCloseHandler = () => {
     dispatch(snackbarActions.setSnackBarLabel(""));
   };
+
+  useEffect(() => {
+    dispatch(authActions.getLoginStatus());
+  }, []);
+
   useEffect(() => {
     const routeLinks =
       auth && auth.idToken ? LINKS_WITH_AUTH : LINKS_WITHOUT_AUTH;
