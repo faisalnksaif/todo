@@ -9,16 +9,18 @@ const initialState = {
   registered: false
 };
 
-const authReducer = (state = initialState, action) => {
+const authReducer = (state = { ...initialState }, action) => {
   switch (action.type) {
+    case actionTypes.SIGNUP:
+      return signupHandler(state, action);
     case actionTypes.SIGNUP_ERROR:
       return signupErrorHandler(state, action);
     case actionTypes.CLEAR_SIGNUP_ERROR:
       return clearErrorHandler(state, action);
     case actionTypes.STORE_TOKEN:
       return storeTokenHandler(state, action);
-    case actionTypes.SIGNUP:
-      return signupHandler(state, action);
+    case actionTypes.LOGOUT:
+      return logoutHandler(state, action);
     case actionTypes.LOADING:
       return loadingHandler(state, action);
     default:
@@ -35,7 +37,7 @@ const signupErrorHandler = (state, action) => {
 };
 
 const storeTokenHandler = (state, action) => {
-    console.log(action)
+  console.log(action);
   return {
     ...state,
     email: action.authDetails.user.email,
@@ -67,6 +69,18 @@ const signupHandler = (state, action) => {
     error: "",
     registered: true,
     loading: false
+  };
+};
+
+const logoutHandler = (state, action) => {
+  return {
+    ...state,
+    email: "",
+    refreshToken: "",
+    idToken: "",
+    error: "",
+    loading: false,
+    registered: false
   };
 };
 

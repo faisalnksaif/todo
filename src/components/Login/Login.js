@@ -22,7 +22,8 @@ export const login = React.memo(props => {
       placeholder: "Email",
       type: "text",
       validations: {
-        required: true
+        required: true,
+        email: true
       },
       errorMessage: ""
     },

@@ -27,9 +27,16 @@ export const setClearStatus = () => {
     type: actionTypes.CLEAR_SIGNUP_ERROR
   };
 };
+
 export const setLoading = () => {
   return {
     type: actionTypes.LOADING
+  };
+};
+
+export const setLogout = () => {
+  return {
+    type: actionTypes.LOGOUT
   };
 };
 
